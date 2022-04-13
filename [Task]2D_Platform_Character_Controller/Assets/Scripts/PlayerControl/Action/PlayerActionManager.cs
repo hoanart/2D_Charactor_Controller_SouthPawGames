@@ -13,13 +13,13 @@
 
             actMovement = new ActMovement();
 
-            moveAction = playerInput.currentActionMap.FindAction("Horizontal");
+            moveAction = playerInput.currentActionMap.FindAction("Movement");
             moveAction.performed += actMovement.OnAct;
             moveAction.canceled += actMovement.OnStop;
         }
 
         private void Update()
         {
-            //Debug.Log(actMovement.Direction);
+            Debug.Log(actMovement.Direction);
         }
     }

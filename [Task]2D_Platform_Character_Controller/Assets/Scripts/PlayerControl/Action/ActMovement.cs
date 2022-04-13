@@ -4,20 +4,20 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class ActMovement : IActable {
-    private Vector2 direction;
-    public Vector2 Direction
+    private float direction;
+    public float Direction
     {
         get=>direction;
     } 
     public void OnAct(InputAction.CallbackContext context)
     {
-        Vector2 inputVector = context.ReadValue<Vector2>();
+        float inputVector = context.ReadValue<float>();
         direction = inputVector;
-        Debug.Log(inputVector);
+        Debug.Log(direction);
     }
 
     public void OnStop(InputAction.CallbackContext context)
     {
-        direction = Vector2.zero;
+        direction = 0;
     }
 }

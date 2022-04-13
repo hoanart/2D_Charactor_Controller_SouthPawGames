@@ -490,8 +490,8 @@ GameObject:
   m_Component:
   - component: {fileID: 937028701}
   - component: {fileID: 937028705}
-  - component: {fileID: 937028704}
   - component: {fileID: 937028703}
+  - component: {fileID: 937028704}
   - component: {fileID: 937028702}
   - component: {fileID: 937028706}
   m_Layer: 0

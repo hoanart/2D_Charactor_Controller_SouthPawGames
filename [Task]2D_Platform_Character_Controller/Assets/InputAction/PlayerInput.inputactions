@@ -6,10 +6,10 @@
             "id": "fc638c36-2570-42c0-b931-dc8c688ed44c",
             "actions": [
                 {
-                    "name": "Horizontal",
+                    "name": "Movement",
                     "type": "Value",
                     "id": "81b2c148-47b4-4db4-bd2f-bb24ea2bb87d",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": ""
                 }
@@ -17,45 +17,39 @@
             "bindings": [
                 {
                     "name": "1D Axis",
-                    "id": "daac94a1-d149-4a76-a6a4-9e6743590db5",
+                    "id": "fcbea184-ec53-4251-80bc-c8ef37f657df",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Horizontal",
+                    "action": "Movement",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
-                    "id": "29d6bfdc-4a4b-46b7-894b-d33b87a46281",
-                    "path": "<Keyboard>/a",
+                    "id": "7192d146-3694-4d06-ab3d-f86843c70bc7",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Horizontal",
+                    "groups": "",
+                    "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
-                    "id": "4bb5dd35-65b3-4666-9790-f335da56d20c",
-                    "path": "<Keyboard>/d",
+                    "id": "86b6e0bd-62ac-423a-8d74-1a0d34469777",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Horizontal",
+                    "groups": "",
+                    "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
             ]
         }
     ],
-    "controlSchemes": [
-        {
-            "name": "Keyboard",
-            "bindingGroup": "Keyboard",
-            "devices": []
-        }
-    ]
+    "controlSchemes": []
 }
