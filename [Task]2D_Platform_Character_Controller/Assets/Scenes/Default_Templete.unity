@@ -523,7 +523,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 937028700}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d05aa02d298902e489e8a124782e8261, type: 3}
   m_Name: 
@@ -539,6 +539,11 @@ MonoBehaviour:
   detectorRayLength: 0.1
   rayOffset: 0.1
   fallClamp: -40
+  height: 10
+  jumpBuffer: 0.1
+  earyGravityModifier: 3
+  targetVelocity: {x: 0, y: 0}
+  maxSpeed: 0
   freeColliderCount: 0
 --- !u!114 &937028703
 MonoBehaviour:
@@ -674,15 +679,20 @@ MonoBehaviour:
   movement: {x: 0, y: 0, z: 0}
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0.56, y: 0.5, z: 0}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  detectorCount: 0
-  detectorRayLength: 0
+    m_Bits: 64
+  detectorCount: 3
+  detectorRayLength: 0.1
   rayOffset: 0.1
   fallClamp: -40
-  freeColliderCount: 0
+  height: 10
+  jumpBuffer: 0.1
+  earyGravityModifier: 3
+  targetVelocity: {x: 0, y: 0}
+  maxSpeed: 10
+  freeColliderCount: 10
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

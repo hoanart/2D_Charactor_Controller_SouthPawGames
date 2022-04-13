@@ -44,15 +44,25 @@ public class PhysicsObject : MonoBehaviour {
     protected float fallClamp = -40.0f;
 
     private float gravity = -9.8f;
+    
+    [Header("Jump")]
+    [SerializeField] protected float height = 10;
 
+    [SerializeField] protected float jumpBuffer = 0.1f;
+    [SerializeField] protected float earyGravityModifier = 3f;
+    
+    
     [Header("Move")]
+    [SerializeField] protected Vector2 targetVelocity;
+    [SerializeField]
+    protected float maxSpeed;
+    
     [SerializeField]
     protected int freeColliderCount;
     
-    
-    private float currentVerticalSpeed;
+    protected float currentVerticalSpeed;
 
-    private float currentHorizontalSpeed;
+    protected float currentHorizontalSpeed;
     
     // Start is called before the first frame update
     void Start()
@@ -63,7 +73,12 @@ public class PhysicsObject : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-       
+        CheckCollision();
+        SimulateGravity();
+        targetVelocity = Vector2.zero;
+        ComputeVelocity();
+        Move();
+        
     }
 
     public void CheckCollision()
@@ -138,8 +153,24 @@ public class PhysicsObject : MonoBehaviour {
     }
     #endregion
     
+    #region Jump
+
+    protected virtual void Jump()
+    {
+        
+    }
+
+    #endregion
     #region Move
 
+    protected virtual void ComputeVelocity()
+    {
+        if (currentHorizontalSpeed > 0 && rightColl ||
+            currentHorizontalSpeed < 0 && leftColl)
+        {
+            currentHorizontalSpeed = 0;
+        }
+    }
     protected void Move()
     {
         var pos = transform.position;
