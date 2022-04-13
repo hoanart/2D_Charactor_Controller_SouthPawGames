@@ -6,7 +6,7 @@
             "id": "fc638c36-2570-42c0-b931-dc8c688ed44c",
             "actions": [
                 {
-                    "name": "Movement",
+                    "name": "Move",
                     "type": "Value",
                     "id": "81b2c148-47b4-4db4-bd2f-bb24ea2bb87d",
                     "expectedControlType": "Axis",
@@ -22,7 +22,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Move",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -33,7 +33,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -44,7 +44,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

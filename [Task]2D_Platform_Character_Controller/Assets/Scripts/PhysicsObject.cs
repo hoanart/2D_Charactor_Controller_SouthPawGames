@@ -63,10 +63,7 @@ public class PhysicsObject : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        CheckCollision();
-        SimulateGravity();
-      
-        Move();
+       
     }
 
     public void CheckCollision()
