@@ -6,6 +6,14 @@ using UnityEngine;
 
 public class PhysicsObject : MonoBehaviour {
 
+    public bool UpColl
+    {
+        get => upColl;
+    }
+    public bool DownColl
+    {
+        get => downColl;
+    }
     public Vector3 movement;
     
     [Header("Collision")]
@@ -43,19 +51,9 @@ public class PhysicsObject : MonoBehaviour {
     [SerializeField]
     protected float fallClamp = -40.0f;
 
-    private float gravity = -9.8f;
+    private float gravity = -9.8f;   
     
-    [Header("Jump")]
-    [SerializeField] protected float height = 10;
-
-    [SerializeField] protected float jumpBuffer = 0.1f;
-    [SerializeField] protected float earyGravityModifier = 3f;
-    
-    
-    [Header("Move")]
-    [SerializeField] protected Vector2 targetVelocity;
-    [SerializeField]
-    protected float maxSpeed;
+  
     
     [SerializeField]
     protected int freeColliderCount;
@@ -71,15 +69,7 @@ public class PhysicsObject : MonoBehaviour {
     }
     
     // Update is called once per frame
-    void Update()
-    {
-        CheckCollision();
-        SimulateGravity();
-        targetVelocity = Vector2.zero;
-        ComputeVelocity();
-        Move();
-        
-    }
+
 
     public void CheckCollision()
     {
@@ -116,7 +106,7 @@ public class PhysicsObject : MonoBehaviour {
         rightDetector = new Detector(
             new Vector2(newBound.max.x, newBound.min.y + rayOffset),
             new Vector2(newBound.max.x, newBound.max.y - rayOffset),
-            Vector2.left);
+            Vector2.right);
     }
 
     private bool Detect(Detector detector)
@@ -165,12 +155,20 @@ public class PhysicsObject : MonoBehaviour {
 
     protected virtual void ComputeVelocity()
     {
+        
+    }
+
+    protected bool IsSideCollision()
+    {
         if (currentHorizontalSpeed > 0 && rightColl ||
             currentHorizontalSpeed < 0 && leftColl)
         {
-            currentHorizontalSpeed = 0;
+            return true;
         }
+
+        return false;
     }
+    
     protected void Move()
     {
         var pos = transform.position;
@@ -220,6 +218,18 @@ public class PhysicsObject : MonoBehaviour {
         foreach (Vector2 point in ModifyDetectorPosition(upDetector))
         {
             Gizmos.DrawRay(point,upDetector.dir*detectorRayLength);
+        }
+        foreach (Vector2 point in ModifyDetectorPosition(downDetector))
+        {
+            Gizmos.DrawRay(point,downDetector.dir*detectorRayLength);
+        }
+        foreach (Vector2 point in ModifyDetectorPosition(leftDetector))
+        {
+            Gizmos.DrawRay(point,leftDetector.dir*detectorRayLength);
+        }
+        foreach (Vector2 point in ModifyDetectorPosition(rightDetector))
+        {
+            Gizmos.DrawRay(point,rightDetector.dir*detectorRayLength);
         }
     }
 }
