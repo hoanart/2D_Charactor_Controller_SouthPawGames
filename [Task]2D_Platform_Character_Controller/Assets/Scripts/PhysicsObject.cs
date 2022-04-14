@@ -6,16 +6,14 @@ using UnityEngine;
 
 public class PhysicsObject : MonoBehaviour {
 
-    public bool UpColl
+    public bool IsGround
     {
-        get => upColl;
+        get;
+        set;
     }
-    public bool DownColl
-    {
-        get => downColl;
-    }
-    public Vector3 movement;
     
+    protected Vector3 movement;
+
     [Header("Collision")]
     [SerializeField]
     protected Bounds bounds;
@@ -31,6 +29,14 @@ public class PhysicsObject : MonoBehaviour {
     [SerializeField]
     [Range(0.0f, 0.3f)]
     protected float rayOffset = 0.1f;
+    protected bool IsUpColl
+    {
+        get => mbUpColl;
+    }
+    protected bool IsDownColl
+    {
+        get => mbDownColl;
+    }
     
     //Collision detector
     private Detector upDetector;
@@ -42,19 +48,17 @@ public class PhysicsObject : MonoBehaviour {
     private Detector rightDetector;
     
     //Collision
-    private bool upColl;
-    private bool downColl;
-    private bool leftColl;
-    private bool rightColl;
+    private bool mbUpColl;
+    private bool mbDownColl;
+    private bool mbLeftColl;
+    private bool mbRightColl;
 
     [Header("Gravity")]
     [SerializeField]
     protected float fallClamp = -40.0f;
 
-    private float gravity = -9.8f;   
-    
-  
-    
+    private float gravity = -9.8f;
+
     [SerializeField]
     protected int freeColliderCount;
     
@@ -62,26 +66,17 @@ public class PhysicsObject : MonoBehaviour {
 
     protected float currentHorizontalSpeed;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-       
-    }
-    
-    // Update is called once per frame
-
-
     public void CheckCollision()
     {
         SetUpRayRange();
 
-        downColl = Detect(downDetector);
+        mbDownColl = Detect(downDetector);
+        IsGround = mbDownColl;
+        //mbDownColl
         
-        //downColl
-        
-        upColl = Detect(upDetector);
-        leftColl = Detect(leftDetector);
-        rightColl = Detect(rightDetector);
+        mbUpColl = Detect(upDetector);
+        mbLeftColl = Detect(leftDetector);
+        mbRightColl = Detect(rightDetector);
         
     }
 
@@ -128,15 +123,12 @@ public class PhysicsObject : MonoBehaviour {
 
     protected void SimulateGravity()
     {
-        if (downColl)
+        if (mbDownColl)
         {
             currentVerticalSpeed = currentVerticalSpeed < 0 ? 0 : currentVerticalSpeed;
         }
         else
         {
-            //Jump 이후 구현.
-            //float fallSpeed =
-
             currentVerticalSpeed += gravity * Time.deltaTime;
             currentVerticalSpeed = currentVerticalSpeed < fallClamp ? fallClamp : currentVerticalSpeed;
         }
@@ -160,8 +152,8 @@ public class PhysicsObject : MonoBehaviour {
 
     protected bool IsSideCollision()
     {
-        if (currentHorizontalSpeed > 0 && rightColl ||
-            currentHorizontalSpeed < 0 && leftColl)
+        if (currentHorizontalSpeed > 0 && mbRightColl ||
+            currentHorizontalSpeed < 0 && mbLeftColl)
         {
             return true;
         }
@@ -173,9 +165,10 @@ public class PhysicsObject : MonoBehaviour {
     {
         var pos = transform.position;
         movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed);
-        //Vector3 move = movement * Time.deltaTime;
+        
         var move = movement * Time.deltaTime;
         var movedPosition = pos + move;
+        
         //if it is not overlap, it is moved until it hits ground.
         var hit = Physics2D.OverlapBox(movedPosition, bounds.size, 0, groundLayer);
         if (!hit)
@@ -208,6 +201,7 @@ public class PhysicsObject : MonoBehaviour {
         }
     }
     #endregion
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

@@ -13,7 +13,10 @@ public class PlayerController : PhysicsObject {
     private float slowDown = 10.0f;
     [SerializeField]
     private float speedClamp = 15.0f;
-    
+
+    private bool mbWalking;
+    private bool mbGround;
+    private bool mbJump;
     [Header("Jump")]
     [SerializeField]
     private float height = 10;
@@ -34,9 +37,12 @@ public class PlayerController : PhysicsObject {
     void Update()
     {
         CheckCollision();
+        playerActionManager.ActJumpAnimation(IsGround);
+        playerActionManager.ActByVelocity(movement.y);
         SimulateGravity();
         ComputeVelocity();
         Jump();
+        
         Move();
         
     }
@@ -48,10 +54,14 @@ public class PlayerController : PhysicsObject {
         Flip(move.x);
         if (move.x == 0)
         {
+            mbWalking = false;
             currentHorizontalSpeed = Mathf.MoveTowards(currentHorizontalSpeed, 0, slowDown);
+            playerActionManager.ActWalkingAnimation(mbWalking);
             return;
         }
-        
+
+        mbWalking = true;
+        playerActionManager.ActWalkingAnimation(mbWalking);
         currentHorizontalSpeed += move.x * maxSpeed*Time.deltaTime;
         currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed, -speedClamp, speedClamp);
         currentHorizontalSpeed = IsSideCollision() ? 0 : currentHorizontalSpeed;
@@ -70,15 +80,17 @@ public class PlayerController : PhysicsObject {
     protected override void Jump()
     {
         bool bJump = playerActionManager.actJump.CanJump;
-        if (bJump&&DownColl)
+        if (bJump&&IsDownColl)
         {
             currentVerticalSpeed = height;
         }
-
-        if (UpColl)
+        
+        
+        if (IsUpColl)
         {
             currentVerticalSpeed = currentVerticalSpeed > 0 ? 0 : currentVerticalSpeed;
         }
         
     }
+    
 }
