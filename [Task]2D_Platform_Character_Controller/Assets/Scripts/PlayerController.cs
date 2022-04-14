@@ -62,6 +62,7 @@ public class PlayerController : PhysicsObject {
 
         mbWalking = true;
         playerActionManager.ActWalkingAnimation(mbWalking);
+        
         currentHorizontalSpeed += move.x * maxSpeed*Time.deltaTime;
         currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed, -speedClamp, speedClamp);
         currentHorizontalSpeed = IsSideCollision() ? 0 : currentHorizontalSpeed;
@@ -73,6 +74,7 @@ public class PlayerController : PhysicsObject {
 
         if (bFlip && x != 0)
         {
+            bounds.center = new Vector3(-bounds.center.x,0,0);
             spriteRenderer.flipX = !spriteRenderer.flipX;
         }
     }

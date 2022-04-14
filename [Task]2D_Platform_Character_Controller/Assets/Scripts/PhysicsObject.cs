@@ -60,7 +60,7 @@ public class PhysicsObject : MonoBehaviour {
     private float gravity = -9.8f;
 
     [SerializeField]
-    protected int freeColliderCount;
+    protected int freeColliderCount = 10;
     
     protected float currentVerticalSpeed;
 
@@ -85,7 +85,7 @@ public class PhysicsObject : MonoBehaviour {
     /// </summary>
     private void SetUpRayRange()
     {
-        Bounds newBound = new Bounds(transform.position, bounds.size);
+        Bounds newBound = new Bounds(transform.position+bounds.center, bounds.size);
         upDetector = new Detector(
             new Vector2(newBound.min.x + rayOffset, newBound.max.y),
             new Vector2(newBound.max.x - rayOffset, newBound.max.y),
@@ -150,6 +150,10 @@ public class PhysicsObject : MonoBehaviour {
         
     }
 
+    /// <summary>
+    /// Whether it collide with side
+    /// </summary>
+    /// <returns></returns>
     protected bool IsSideCollision()
     {
         if (currentHorizontalSpeed > 0 && mbRightColl ||
@@ -176,27 +180,27 @@ public class PhysicsObject : MonoBehaviour {
             transform.position += move;
             return;
         }
-
+        
         var positionToMove = transform.position;
         for (int i = 1; i < freeColliderCount; i++)
         {
             float t = (float) i / freeColliderCount;
             var posLerp = Vector2.Lerp(pos, movedPosition, t);
-
+        
             if (Physics2D.OverlapBox(posLerp, bounds.size, 0, groundLayer))
             {
                 transform.position = positionToMove;
-
+                Debug.Log($"positionToMOve: {transform.position}");
                 if (i == 1)
                 {
                     currentVerticalSpeed = currentVerticalSpeed < 0 ? 0 : currentVerticalSpeed;
                     var dir = transform.position - hit.transform.position;
                     transform.position += dir.normalized * move.magnitude;
                 }
-
+        
                 return;
             }
-
+        
             positionToMove = posLerp;
         }
     }
