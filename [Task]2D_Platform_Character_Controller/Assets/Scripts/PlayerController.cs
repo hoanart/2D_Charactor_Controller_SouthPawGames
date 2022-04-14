@@ -64,8 +64,9 @@ public class PlayerController : PhysicsObject {
         playerActionManager.ActWalkingAnimation(mbWalking);
         
         currentHorizontalSpeed += move.x * maxSpeed*Time.deltaTime;
-        currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed, -speedClamp, speedClamp);
-        currentHorizontalSpeed = IsSideCollision() ? 0 : currentHorizontalSpeed;
+        movement.x += move.x * maxSpeed*Time.deltaTime;
+        //currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed, -speedClamp, speedClamp);
+        //currentHorizontalSpeed = IsSideCollision() ? 0 : currentHorizontalSpeed;
     }
 
     private void Flip(float x)
