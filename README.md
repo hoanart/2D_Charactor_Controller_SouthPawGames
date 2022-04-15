@@ -7,7 +7,8 @@ https://user-images.githubusercontent.com/56676158/163569869-94c10d88-eb8b-4a4f-
 ## 목표
 - 플레이어가 벽에 부딪치거나, 땅을 밟고 있을 수 있도록 구현.
 ## 구현
-- 오브젝트 바운딩 박스 주변에 나오는 레이를 활용하여, 충돌할 레이어를 감지 시스템 구현. 
+- 오브젝트 바운딩 박스 주변에 나오는 레이를 활용하여, 충돌할 레이어를 감지 시스템 구현.
+- 오브젝트가 움직이는 경우, 각 레이가 생성될 원점에서 레이캐스트를 활용하여 충돌 감지.
 - 충돌 감지 지점의 위치가 고정되어 벽을 벗어나지 않도록 구현.
 
 <p align="center">
@@ -33,12 +34,13 @@ https://user-images.githubusercontent.com/56676158/163569869-94c10d88-eb8b-4a4f-
 
 ![image](https://user-images.githubusercontent.com/56676158/163574104-f5ff1992-5c6d-43d0-b269-1ce8096a1db0.png)
 
-- 좌,우 입력에 따라 좌측이나 우측 일정 속도 증가.
-- 좌, 우 입력에 따라 물체의 스프라이트 이미지 반전.
+- 좌,우 입력에 따라 좌측이나 우측 일정 속도만큼 증가.
+- 좌,우 입력이 없는 경우, ```Mathf.MoveToWords```를 활용하여 속도를 점차적으로 줄어들게끔 구현.
+- 스프라이트렌더러의 flipX를 활용하여, 좌, 우 입력에 따른 물체의 스프라이트 이미지 반전.
 
-https://user-images.githubusercontent.com/56676158/163577656-4ae4d5d3-0879-41c4-ab88-9420eef5573f.mp4
+https://user-images.githubusercontent.com/56676158/163584660-9a64c21d-368c-4493-a082-005ee52e733d.mp4
 
-- 하측에 충돌이 되어 있는 경우에만 일정 높이까지 점프가 가능.
+- 하측에 충돌 중인 경우, 일정 높이까지 점프가 되도록 구현.
 
 https://user-images.githubusercontent.com/56676158/163577683-253bdb37-422d-4d95-9c4c-fac3b6a346f1.mp4
 
