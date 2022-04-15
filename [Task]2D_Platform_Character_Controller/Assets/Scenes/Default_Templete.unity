@@ -715,16 +715,18 @@ MonoBehaviour:
     m_Bits: 64
   detectorCount: 20
   rayOffset: 0.01
-  fallClamp: -10
   collInfo:
     isTop: 0
     isBottom: 0
     isLeft: 0
     isRight: 0
+  fallClamp: -10
   maxSpeed: 10
-  slowDown: 3
+  slowDown: 5
   speedClamp: 6
   height: 6.3
+  verticalSpeed: 0
+  horizontalSpeed: 0
 --- !u!1 &950884142
 GameObject:
   m_ObjectHideFlags: 3

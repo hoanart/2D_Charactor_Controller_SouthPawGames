@@ -51,7 +51,7 @@ public class PhysicsObject : MonoBehaviour {
 
     private  float gravity = -9.8f;
 
-    #region SetUp
+    #region Set up ray origins
     /// <summary>
     /// Setup ray start point and end point.
     /// </summary>
@@ -74,7 +74,7 @@ public class PhysicsObject : MonoBehaviour {
     }
 
     /// <summary>
-    /// Return Collection that have ray origins as many as detector count
+    /// Return collection that have ray origins as many as detector count.
     /// </summary>
     /// <param name="detector">the extend to which a ray will appear </param>
     /// <returns></returns>
@@ -104,7 +104,7 @@ public class PhysicsObject : MonoBehaviour {
                 Debug.DrawRay(origin, Vector2.up * dirY * rayLength, Color.red);
                 if (hit)
                 {
-                    if (hit.collider.tag == "Obstacle")
+                    if (hit.collider.CompareTag("Obstacle") )
                     {
                         continue;
                     }
@@ -131,7 +131,9 @@ public class PhysicsObject : MonoBehaviour {
             }
         }
     }
-
+    /// <summary>
+    /// Detect collision about both side.
+    /// </summary>
     private void HorizontalCollision()
     {
         float dirX = Mathf.Sign(movement.x);
@@ -144,7 +146,7 @@ public class PhysicsObject : MonoBehaviour {
                 Debug.DrawRay(origin, Vector2.right * dirX * rayLength, Color.red);
                 if (hit)
                 {
-                    if (hit.collider.tag == "Obstacle")
+                    if (hit.collider.CompareTag("Obstacle"))
                     {
                         continue;
                     }
@@ -164,7 +166,7 @@ public class PhysicsObject : MonoBehaviour {
                 Debug.DrawRay(origin, Vector2.right * dirX * rayLength, Color.red);
                 if (hit)
                 {
-                    if (hit.collider.tag == "Obstacle")
+                    if (hit.collider.CompareTag("Obstacle"))
                     {
                         continue;
                     }
@@ -182,6 +184,10 @@ public class PhysicsObject : MonoBehaviour {
     
     #region Gravity
 
+    /// <summary>
+    /// Apply gravity to object
+    /// </summary>
+    /// <param name="verticalSpeed">It is applied by gravity</param>
     protected void SimulateGravity(ref float verticalSpeed)
     {
         if (collInfo.isBottom)
@@ -193,14 +199,16 @@ public class PhysicsObject : MonoBehaviour {
         {
             verticalSpeed += gravity * Time.deltaTime;
             IsGround = false;
-            if (movement.y < fallClamp) movement.y = fallClamp;
+            if (verticalSpeed < fallClamp) verticalSpeed = fallClamp;
         }
     }
 
     #endregion
 
     #region Jump
-
+    /// <summary>
+    /// Describe jump behaviour.
+    /// </summary>
     protected virtual void Jump()
     {
     }
@@ -208,7 +216,9 @@ public class PhysicsObject : MonoBehaviour {
     #endregion
 
     #region Walk
-
+    /// <summary>
+    /// Describe walk behaviour.
+    /// </summary>
     protected virtual void Walk()
     {
     }
@@ -217,12 +227,19 @@ public class PhysicsObject : MonoBehaviour {
 
     #region Move
 
+    /// <summary>
+    /// Player is moved by speed is changed.
+    /// </summary>
+    /// <param name="hSpeed">Horizontal speed</param>
+    /// <param name="vSpeed">Vertical speed</param>
     protected void Move(float hSpeed, float vSpeed)
     {
         movement.y += vSpeed;
         movement.x += hSpeed;
         movement *= Time.deltaTime;
+        
         SetUpRayRange();
+        
         collInfo.Init();
 
         if (movement.x != 0)
@@ -234,12 +251,8 @@ public class PhysicsObject : MonoBehaviour {
         {
             VerticalCollision();
         }
-
-
-        //CheckCollision();
+        
         transform.position += movement;
-        //transform.Translate(movement);
-        //movement.x = Mathf.Clamp(movement.x, -speedClamp, speedClamp);
     }
 
     #endregion

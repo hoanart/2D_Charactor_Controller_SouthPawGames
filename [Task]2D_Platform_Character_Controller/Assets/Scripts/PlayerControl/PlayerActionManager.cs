@@ -13,6 +13,10 @@
 
         private Animator animator;
         
+        private static readonly int IsGround = Animator.StringToHash("isGround");
+        private static readonly int IsWalking = Animator.StringToHash("isWalking");
+        private static readonly int VelocityY = Animator.StringToHash("velocityY");
+
         private void Start()
         {
             playerInput = GetComponent<PlayerInput>();
@@ -32,19 +36,30 @@
             animator = GetComponent<Animator>();
         }
 
+        /// <summary>
+        /// Active walk animation
+        /// </summary>
+        /// <param name="bWalking">is walking?</param>
         public void ActWalkingAnimation(bool bWalking)
         {
-            animator.SetBool("isWalking",bWalking);
+            animator.SetBool(IsWalking,bWalking);
         }
-
+        /// <summary>
+        /// active jump animation
+        /// </summary>
+        /// <param name="bGround">is ground?</param>
         public void ActJumpAnimation(bool bGround)
         {
-            animator.SetBool("isGround",bGround);
+            animator.SetBool(IsGround,bGround);
         }
 
+        /// <summary>
+        /// active falling animation by movementY
+        /// </summary>
+        /// <param name="movementY">movement y value</param>
         public void ActByVelocity(float movementY)
         {
-            animator.SetFloat("velocityY",movementY);
+            animator.SetFloat(VelocityY,movementY);
         }
         
     }

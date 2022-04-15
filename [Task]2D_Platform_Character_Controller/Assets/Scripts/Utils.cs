@@ -1,6 +1,6 @@
 ﻿    using System;
     using UnityEngine;
-
+    
     public struct Detector {
         public Vector2 start;
         public Vector2 end;

@@ -5,28 +5,34 @@ using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : PhysicsObject {
-    [Header("Move")]
+    [Header("Walk")]
+    [Tooltip("최대 속도")]
     [SerializeField]
     private float maxSpeed = 10.0f;
-
+    [Tooltip("감속 속도")]
     [SerializeField]
     private float slowDown = 10.0f;
+    [Tooltip("증가되는 속도 한계점")]
     [SerializeField]
     private float speedClamp = 15.0f;
 
-    private bool mbWalking;
-    private bool mbJump;
     [Header("Jump")]
+    [Tooltip("점프 높이")]
     [SerializeField]
     private float height = 10;
+
+    
+    [SerializeField]
+    [Tooltip("수직 속도")]
+    private float verticalSpeed;
+    [SerializeField]
+    [Tooltip("수평 속도")]
+    private float horizontalSpeed;
     
     private SpriteRenderer spriteRenderer;
 
     private PlayerActionManager playerActionManager;
-    
-    protected float verticalSpeed;
 
-    protected float horizontalSpeed;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,49 +51,34 @@ public class PlayerController : PhysicsObject {
         horizontalSpeed = collInfo.isLeft || collInfo.isRight ? 0 : horizontalSpeed;
         
         Jump();
-        
         SimulateGravity(ref verticalSpeed);
+        
         Walk();
+        
         Move(horizontalSpeed,verticalSpeed);
         
     }
+    
     protected override void Walk()
     {
         Vector2 move;
         move.x = playerActionManager.actMovement.Direction;
+        
         Flip(move.x);
+        
         if (move.x == 0)
         {
-            mbWalking = false;
-            movement.x=Mathf.MoveTowards(movement.x, 0, slowDown);
             horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, 0, slowDown);
-            playerActionManager.ActWalkingAnimation(mbWalking);
+            Debug.Log(horizontalSpeed);
+            playerActionManager.ActWalkingAnimation(false);
             return;
         }
-
-        mbWalking = true;
-        playerActionManager.ActWalkingAnimation(mbWalking);
-       
-        horizontalSpeed += move.x * maxSpeed*Time.deltaTime;
-        //movement.x += move.x * maxSpeed*Time.deltaTime;
-        horizontalSpeed = Mathf.Clamp(horizontalSpeed, -speedClamp, speedClamp);
         
-        //movement.x = Mathf.Clamp(movement.x, -speedClamp, speedClamp);
-        //movement.x += horizontalSpeed*Time.deltaTime;
-        //horizontalSpeed = IsSideCollision() ? 0 : horizontalSpeed;
+        horizontalSpeed += move.x * maxSpeed*Time.deltaTime;
+        horizontalSpeed = Mathf.Clamp(horizontalSpeed, -speedClamp, speedClamp);
+        playerActionManager.ActWalkingAnimation(true);
     }
-
-    private void Flip(float x)
-    {
-        bool bFlip = spriteRenderer.flipX ? (x > 0.01f) : (x < 0.01f);
-
-        if (bFlip && x != 0)
-        {
-            bounds.center = new Vector3(-bounds.center.x,0,0);
-            spriteRenderer.flipX = !spriteRenderer.flipX;
-        }
-    }
-
+    
     protected override void Jump()
     {
         bool bJump = playerActionManager.actJump.CanJump;
@@ -97,6 +88,21 @@ public class PlayerController : PhysicsObject {
             IsGround = false;
         }
 
+    }
+    
+    /// <summary>
+    /// Flip the sprite.
+    /// </summary>
+    /// <param name="x">Input key value</param>
+    private void Flip(float x)
+    {
+        bool bFlip = spriteRenderer.flipX ? (x > 0.01f) : (x < 0.01f);
+
+        if (bFlip && x != 0)
+        {
+            bounds.center = new Vector3(-bounds.center.x,0,0);
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
     }
     
 }
