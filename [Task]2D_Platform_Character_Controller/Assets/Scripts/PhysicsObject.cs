@@ -23,20 +23,11 @@ public class PhysicsObject : MonoBehaviour {
 
     [SerializeField]
     protected int detectorCount;
-
-    [SerializeField]
-    protected float detectorRayLength;
+    
     [SerializeField]
     [Range(0.0f, 0.3f)]
     protected float rayOffset = 0.1f;
-    protected bool IsUpColl
-    {
-        get => mbUpColl;
-    }
-    protected bool IsDownColl
-    {
-        get => mbDownColl;
-    }
+
     
     //Collision detector
     private Detector upDetector;
@@ -47,48 +38,23 @@ public class PhysicsObject : MonoBehaviour {
 
     private Detector rightDetector;
     
-    //Collision
-    private bool mbUpColl;
-    private bool mbDownColl;
-    private bool mbLeftColl;
-    private bool mbRightColl;
 
     [Header("Gravity")]
     [SerializeField]
     protected float fallClamp = -40.0f;
 
-    private float gravity = -9.8f;
-
-    [SerializeField]
-    protected int freeColliderCount = 10;
+    protected float gravity = -9.8f;
+    
     [SerializeField]
     protected CollisionInfo collInfo;
     
-    protected float currentVerticalSpeed;
 
-    protected float currentHorizontalSpeed;
 
     protected float skinWidth = 0.015f;
     
 
     
-    public void CheckCollision()
-    {
-        // SetUpRayRange();
-        // if (movement.x != 0)
-        // {
-        //     HorizontalCollision(ref movement);
-        //       
-        // }
-        //
-        // if (movement.y != 0)
-        // {
-        //     VerticalCollision(ref movement);  
-        // }
-        //
-    }
-
-    private void VerticalCollision(ref Vector3 movement)
+    private void VerticalCollision()
     {
         float dirY = Mathf.Sign (movement.y);
         float rayLength = Mathf.Abs(movement.y) + skinWidth;
@@ -124,7 +90,7 @@ public class PhysicsObject : MonoBehaviour {
         }
     }
 
-    private void HorizontalCollision(ref Vector3 movement)
+    private void HorizontalCollision()
     {
         float dirX = Mathf.Sign (movement.x);
         float rayLength = Mathf.Abs(movement.x) + skinWidth;
@@ -136,6 +102,10 @@ public class PhysicsObject : MonoBehaviour {
                 Debug.DrawRay(origin,Vector2.right*dirX*rayLength,Color.red);
                 if (hit)
                 {
+                    if (hit.collider.tag == "Obstacle")
+                    {
+                        Debug.Log("터치");
+                    }
                
                     movement.x = (hit.distance - skinWidth) *dirX;
                     rayLength = hit.distance;
@@ -171,20 +141,16 @@ public class PhysicsObject : MonoBehaviour {
         newBound.Expand(skinWidth*-2);
         upDetector = new Detector(
             new Vector2(newBound.min.x + rayOffset, newBound.max.y),
-            new Vector2(newBound.max.x - rayOffset, newBound.max.y),
-            Vector2.up);
+            new Vector2(newBound.max.x - rayOffset, newBound.max.y));
         downDetector = new Detector(
             new Vector2(newBound.min.x + rayOffset, newBound.min.y),
-            new Vector2(newBound.max.x - rayOffset, newBound.min.y),
-            Vector2.down);
+            new Vector2(newBound.max.x - rayOffset, newBound.min.y));
         leftDetector = new Detector(
             new Vector2(newBound.min.x, newBound.min.y + rayOffset),
-            new Vector2(newBound.min.x, newBound.max.y - rayOffset),
-            Vector2.left);
+            new Vector2(newBound.min.x, newBound.max.y - rayOffset));
         rightDetector = new Detector(
             new Vector2(newBound.max.x, newBound.min.y + rayOffset),
-            new Vector2(newBound.max.x, newBound.max.y - rayOffset),
-            Vector2.right);
+            new Vector2(newBound.max.x, newBound.max.y - rayOffset));
     }
 
     protected IEnumerable<Vector2> CalculateDetectorPosition(Detector detector)
@@ -198,10 +164,20 @@ public class PhysicsObject : MonoBehaviour {
 
     #region Gravity
 
-    protected void SimulateGravity()
+    protected void SimulateGravity(ref float verticalSpeed)
     {
-        movement.y += gravity * Time.deltaTime;
-        if (movement.y < fallClamp) movement.y = fallClamp;
+        if (collInfo.isBottom)
+        {
+            if(verticalSpeed<0)
+                verticalSpeed = 0;
+        }
+        else
+        {
+            verticalSpeed += gravity*Time.deltaTime;
+            if (movement.y < fallClamp) movement.y = fallClamp;
+            
+        }
+        
     }
     #endregion
     
@@ -213,47 +189,39 @@ public class PhysicsObject : MonoBehaviour {
     }
 
     #endregion
-    #region Move
 
-    protected virtual void ComputeVelocity()
+    #region Walk
+
+    protected virtual void Walk()
     {
         
     }
 
-    /// <summary>
-    /// Whether it collide with side
-    /// </summary>
-    /// <returns></returns>
-    protected bool IsSideCollision()
-    {
-        if (currentHorizontalSpeed > 0 && mbRightColl ||
-            currentHorizontalSpeed < 0 && mbLeftColl)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    #endregion
+    #region Move
     
-    protected void Move()
+    protected void Move(float hSpeed,float vSpeed)
     {
+        movement.y += vSpeed;
+        movement.x += hSpeed;
+        movement *= Time.deltaTime;
         SetUpRayRange();
         collInfo.Init();
         
         if (movement.x != 0)
         {
-            HorizontalCollision(ref movement);
-              
+            HorizontalCollision();
         }
 
         if (movement.y != 0)
         {
-            VerticalCollision(ref movement);  
+            VerticalCollision();  
         }
         
      
         //CheckCollision();
         transform.position+= movement ;
+        //transform.Translate(movement);
         //movement.x = Mathf.Clamp(movement.x, -speedClamp, speedClamp);
     }
     #endregion
@@ -262,8 +230,5 @@ public class PhysicsObject : MonoBehaviour {
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position+bounds.center,bounds.size);
-        
-        SetUpRayRange();
-
     }
 }

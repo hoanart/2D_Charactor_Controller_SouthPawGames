@@ -13,7 +13,7 @@ public class ActMovement : IActable {
     {
         float inputVector = context.ReadValue<float>();
         direction = inputVector;
-        Debug.Log(direction);
+     
     }
 
     public void OnStop(InputAction.CallbackContext context)

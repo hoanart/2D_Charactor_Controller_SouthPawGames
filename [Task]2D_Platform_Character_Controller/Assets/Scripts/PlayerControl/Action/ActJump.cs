@@ -14,7 +14,6 @@ public class ActJump : IActable {
     {
         var inputValue = context.ReadValueAsButton();
         mbJump = inputValue;
-        Debug.Log($"Jump: {mbJump}");
     }
 
     public void OnStop(InputAction.CallbackContext context)

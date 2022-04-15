@@ -16,7 +16,6 @@ public class PlayerController : PhysicsObject {
     private float speedClamp = 15.0f;
 
     private bool mbWalking;
-    private bool mbGround;
     private bool mbJump;
     [Header("Jump")]
     [SerializeField]
@@ -25,41 +24,36 @@ public class PlayerController : PhysicsObject {
     private SpriteRenderer spriteRenderer;
 
     private PlayerActionManager playerActionManager;
+    
+    protected float verticalSpeed;
 
+    protected float horizontalSpeed;
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerActionManager = GetComponent<PlayerActionManager>();
     }
-
-    // Update is called once per frame
-    private void FixedUpdate()
-    {
-       
-    }
+    
 
     void Update()
     {
         
         playerActionManager.ActJumpAnimation(IsGround);
-        playerActionManager.ActByVelocity(movement.y);
-        if (collInfo.isBottom || collInfo.isTop)
-        {
-            movement.y = 0;
-        }
-        SimulateGravity();
-        ComputeVelocity();
+        playerActionManager.ActByVelocity(verticalSpeed);
+        
+        verticalSpeed = collInfo.isBottom || collInfo.isTop ? 0 : verticalSpeed;
+        horizontalSpeed = collInfo.isLeft || collInfo.isRight ? 0 : horizontalSpeed;
         
         Jump();
         
-        Move();
+        SimulateGravity(ref verticalSpeed);
+        Walk();
+        Move(horizontalSpeed,verticalSpeed);
         
     }
-    protected override void ComputeVelocity()
+    protected override void Walk()
     {
-        
-        //targetVelocity = Vector2.zero;
         Vector2 move;
         move.x = playerActionManager.actMovement.Direction;
         Flip(move.x);
@@ -67,21 +61,21 @@ public class PlayerController : PhysicsObject {
         {
             mbWalking = false;
             movement.x=Mathf.MoveTowards(movement.x, 0, slowDown);
-            currentHorizontalSpeed = Mathf.MoveTowards(currentHorizontalSpeed, 0, slowDown);
+            horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, 0, slowDown);
             playerActionManager.ActWalkingAnimation(mbWalking);
             return;
         }
 
         mbWalking = true;
         playerActionManager.ActWalkingAnimation(mbWalking);
-        movement.x = 0;
-        //currentHorizontalSpeed += move.x * maxSpeed*Time.deltaTime;
-        movement.x += move.x * maxSpeed*Time.deltaTime;
-        //currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed, -speedClamp, speedClamp);
+       
+        horizontalSpeed += move.x * maxSpeed*Time.deltaTime;
+        //movement.x += move.x * maxSpeed*Time.deltaTime;
+        horizontalSpeed = Mathf.Clamp(horizontalSpeed, -speedClamp, speedClamp);
         
-        movement.x = Mathf.Clamp(movement.x, -speedClamp, speedClamp);
-        //movement.x += currentHorizontalSpeed*Time.deltaTime;
-        //currentHorizontalSpeed = IsSideCollision() ? 0 : currentHorizontalSpeed;
+        //movement.x = Mathf.Clamp(movement.x, -speedClamp, speedClamp);
+        //movement.x += horizontalSpeed*Time.deltaTime;
+        //horizontalSpeed = IsSideCollision() ? 0 : horizontalSpeed;
     }
 
     private void Flip(float x)
@@ -100,8 +94,7 @@ public class PlayerController : PhysicsObject {
         bool bJump = playerActionManager.actJump.CanJump;
         if (bJump&&collInfo.isBottom)
         {
-            Debug.Log("점프");
-            currentVerticalSpeed = height;
+            verticalSpeed = height;
             IsGround = false;
         }
 
