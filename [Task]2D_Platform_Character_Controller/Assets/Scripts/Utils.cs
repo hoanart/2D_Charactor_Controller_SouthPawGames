@@ -17,7 +17,6 @@
         public bool isBottom;
         public bool isLeft;
         public bool isRight;
-
         public void CheckTopBottom(bool bTop,bool bBottom)
         {
             isTop = bTop;
