@@ -54,7 +54,8 @@ https://user-images.githubusercontent.com/56676158/163577683-253bdb37-422d-4d95-
 ![image](https://user-images.githubusercontent.com/56676158/163581495-ab114ecd-1ae7-4ff8-a29c-cac21a3bd8cb.png)
 
 - float 파라미터와 Blend Tree를 활용하여 수직 하강 속도에 따라 다른 애니메이션 재생되도록 구현.
-![image](https://user-images.githubusercontent.com/56676158/163581374-c703994f-2dae-4170-bf8c-6b58b5757b44.png)
+<p align="center">
+ <img src= "https://user-images.githubusercontent.com/56676158/163581374-c703994f-2dae-4170-bf8c-6b58b5757b44.png"</p>
 
 
 
