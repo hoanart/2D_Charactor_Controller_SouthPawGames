@@ -1,4 +1,4 @@
-# 2D_Charactor_Controller_SouthPawGames
+# 2D_Charactor_Controller_SouthPawGames_이성호
  
 # 결과물
 https://user-images.githubusercontent.com/56676158/163569869-94c10d88-eb8b-4a4f-b025-2258418f65ae.mp4
