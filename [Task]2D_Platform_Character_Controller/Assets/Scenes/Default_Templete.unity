@@ -978,7 +978,7 @@ GameObject:
   - component: {fileID: 1340346426}
   m_Layer: 6
   m_Name: Obstacles
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1829,7 +1829,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 13
-      m_TileSpriteIndex: 17
+      m_TileSpriteIndex: 18
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -4760,10 +4760,10 @@ Tilemap:
     m_Data: {fileID: -2280192180542575613, guid: 634cbb75b201f9d41ab597ffe554b976, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -8907666336204531924, guid: 634cbb75b201f9d41ab597ffe554b976, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 6183478059368212212, guid: 634cbb75b201f9d41ab597ffe554b976, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 6183478059368212212, guid: 634cbb75b201f9d41ab597ffe554b976, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 287
     m_Data:
