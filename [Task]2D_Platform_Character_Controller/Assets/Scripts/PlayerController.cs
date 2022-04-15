@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class PlayerController : PhysicsObject {
     [Header("Move")]
-    
     [SerializeField]
     private float maxSpeed = 10.0f;
 

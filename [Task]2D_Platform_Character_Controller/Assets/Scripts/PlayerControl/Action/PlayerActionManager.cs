@@ -7,9 +7,6 @@
         public ActMovement actMovement;
         public ActJump actJump;
 
-        [SerializeField]
-        private LayerMask groundLayer;
-        
         private PlayerInput playerInput;
         private InputAction moveAction;
         private InputAction jumpAction;
