@@ -35,9 +35,11 @@ https://user-images.githubusercontent.com/56676158/163569869-94c10d88-eb8b-4a4f-
 
 - 좌,우 입력에 따라 좌측이나 우측 일정 속도 증가.
 - 좌, 우 입력에 따라 물체의 스프라이트 이미지 반전.
+
 https://user-images.githubusercontent.com/56676158/163577656-4ae4d5d3-0879-41c4-ab88-9420eef5573f.mp4
 
 - 하측에 충돌이 되어 있는 경우에만 일정 높이까지 점프가 가능.
+
 https://user-images.githubusercontent.com/56676158/163577683-253bdb37-422d-4d95-9c4c-fac3b6a346f1.mp4
 
 - 수직, 수평의 속도를 오브젝트의 위치에 더해줌으로써 오브젝트의 위치가 이동되도록 구현.
