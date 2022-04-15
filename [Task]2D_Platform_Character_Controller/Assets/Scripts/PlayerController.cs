@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -33,14 +34,23 @@ public class PlayerController : PhysicsObject {
     }
 
     // Update is called once per frame
+    private void FixedUpdate()
+    {
+       
+    }
 
     void Update()
     {
-        CheckCollision();
+        
         playerActionManager.ActJumpAnimation(IsGround);
         playerActionManager.ActByVelocity(movement.y);
+        if (collInfo.isBottom || collInfo.isTop)
+        {
+            movement.y = 0;
+        }
         SimulateGravity();
         ComputeVelocity();
+        
         Jump();
         
         Move();
@@ -48,6 +58,7 @@ public class PlayerController : PhysicsObject {
     }
     protected override void ComputeVelocity()
     {
+        
         //targetVelocity = Vector2.zero;
         Vector2 move;
         move.x = playerActionManager.actMovement.Direction;
@@ -55,6 +66,7 @@ public class PlayerController : PhysicsObject {
         if (move.x == 0)
         {
             mbWalking = false;
+            movement.x=Mathf.MoveTowards(movement.x, 0, slowDown);
             currentHorizontalSpeed = Mathf.MoveTowards(currentHorizontalSpeed, 0, slowDown);
             playerActionManager.ActWalkingAnimation(mbWalking);
             return;
@@ -62,10 +74,13 @@ public class PlayerController : PhysicsObject {
 
         mbWalking = true;
         playerActionManager.ActWalkingAnimation(mbWalking);
-        
-        currentHorizontalSpeed += move.x * maxSpeed*Time.deltaTime;
+        movement.x = 0;
+        //currentHorizontalSpeed += move.x * maxSpeed*Time.deltaTime;
         movement.x += move.x * maxSpeed*Time.deltaTime;
         //currentHorizontalSpeed = Mathf.Clamp(currentHorizontalSpeed, -speedClamp, speedClamp);
+        
+        movement.x = Mathf.Clamp(movement.x, -speedClamp, speedClamp);
+        //movement.x += currentHorizontalSpeed*Time.deltaTime;
         //currentHorizontalSpeed = IsSideCollision() ? 0 : currentHorizontalSpeed;
     }
 
@@ -83,17 +98,13 @@ public class PlayerController : PhysicsObject {
     protected override void Jump()
     {
         bool bJump = playerActionManager.actJump.CanJump;
-        if (bJump&&IsDownColl)
+        if (bJump&&collInfo.isBottom)
         {
+            Debug.Log("점프");
             currentVerticalSpeed = height;
+            IsGround = false;
         }
-        
-        
-        if (IsUpColl)
-        {
-            currentVerticalSpeed = currentVerticalSpeed > 0 ? 0 : currentVerticalSpeed;
-        }
-        
+
     }
     
 }

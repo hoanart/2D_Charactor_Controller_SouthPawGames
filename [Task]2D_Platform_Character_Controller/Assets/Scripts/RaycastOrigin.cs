@@ -1,4 +1,5 @@
 ﻿
+    using System;
     using UnityEngine;
 
     public struct Detector {
@@ -11,9 +12,30 @@
             this.end = end;
             this.dir = dir;
         }
+    }
+    [Serializable]
+    public struct CollisionInfo {
+        public bool isTop;
+        public bool isBottom;
+        public bool isLeft;
+        public bool isRight;
 
-        struct RaycastOrigin {
-            public Vector2 topLeft, topRight;
-            public Vector2 bottomLeft, bottomRight;
+        public void CheckTopBottom(bool bTop,bool bBottom)
+        {
+            isTop = bTop;
+            isBottom = bBottom;
+        }
+
+        public void CheckSide(bool bLeft, bool bRight)
+        {
+            isLeft = bLeft;
+            isRight = bRight;
+        }
+        public void Init()
+        {
+            isTop = false;
+            isBottom = false;
+            isLeft = false;
+            isRight = false;
         }
     }

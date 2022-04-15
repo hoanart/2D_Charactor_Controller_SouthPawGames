@@ -61,49 +61,65 @@ public class PhysicsObject : MonoBehaviour {
 
     [SerializeField]
     protected int freeColliderCount = 10;
+    [SerializeField]
+    protected CollisionInfo collInfo;
     
     protected float currentVerticalSpeed;
 
     protected float currentHorizontalSpeed;
 
     protected float skinWidth = 0.015f;
+    
+
+    
     public void CheckCollision()
     {
-        SetUpRayRange();
-        if (movement.x != 0)
-        {
-            HorizontalCollision(ref movement);
-              
-        }
-
-        if (movement.y != 0)
-        {
-            VerticalCollision(ref movement);  
-        }
-        
+        // SetUpRayRange();
+        // if (movement.x != 0)
+        // {
+        //     HorizontalCollision(ref movement);
+        //       
+        // }
+        //
+        // if (movement.y != 0)
+        // {
+        //     VerticalCollision(ref movement);  
+        // }
+        //
     }
 
     private void VerticalCollision(ref Vector3 movement)
     {
+        float dirY = Mathf.Sign (movement.y);
         float rayLength = Mathf.Abs(movement.y) + skinWidth;
-        foreach (var origin in CalculateDetectorPosition(downDetector))
+        if (dirY > 0)
+        { 
+            foreach (var origin in CalculateDetectorPosition(upDetector))
         {
-            var hit = Physics2D.Raycast(origin, downDetector.dir, rayLength, groundLayer);
-            Debug.DrawRay(origin,Vector3.down*rayLength,Color.red);
+            var hit = Physics2D.Raycast(origin, Vector2.up*dirY, rayLength, groundLayer);
+            Debug.DrawRay(origin,Vector2.up*dirY*rayLength,Color.red);
             if (hit)
             {
-                movement.y = (hit.distance - skinWidth) * downDetector.dir.y;
+                
+                movement.y = (hit.distance - skinWidth) * dirY;
                 rayLength = hit.distance;
+                collInfo.CheckTopBottom(true,false);
             }
         }
-        foreach (var origin in CalculateDetectorPosition(upDetector))
+        }
+        else
         {
-            var hit = Physics2D.Raycast(origin, upDetector.dir, rayLength, groundLayer);
-            Debug.DrawRay(origin,Vector3.up*rayLength,Color.red);
-            if (hit)
+            foreach (var origin in CalculateDetectorPosition(downDetector))
             {
-                movement.y = (hit.distance - skinWidth) * downDetector.dir.y;
-                rayLength = hit.distance;
+                var hit = Physics2D.Raycast(origin, Vector2.up*dirY, rayLength, groundLayer);
+                Debug.DrawRay(origin,Vector2.up*dirY*rayLength,Color.red);
+                if (hit)
+                {
+                    IsGround = true;
+                    movement.y = (hit.distance - skinWidth) * dirY;
+                    rayLength = hit.distance;
+                    collInfo.CheckTopBottom(false,true);
+                }
             }
         }
     }
@@ -112,26 +128,39 @@ public class PhysicsObject : MonoBehaviour {
     {
         float dirX = Mathf.Sign (movement.x);
         float rayLength = Mathf.Abs(movement.x) + skinWidth;
-        foreach (var origin in CalculateDetectorPosition(leftDetector))
+        if (dirX > 0)
         {
-            var hit = Physics2D.Raycast(origin, Vector2.right*dirX, rayLength, groundLayer);
-            Debug.DrawRay(origin,Vector2.right*dirX*rayLength,Color.red);
-            if (hit)
+            foreach (var origin in CalculateDetectorPosition(rightDetector))
             {
-                movement.x = (hit.distance - skinWidth) * dirX;
-                rayLength = hit.distance;
+                var hit = Physics2D.Raycast(origin, Vector2.right*dirX, rayLength, groundLayer);
+                Debug.DrawRay(origin,Vector2.right*dirX*rayLength,Color.red);
+                if (hit)
+                {
+               
+                    movement.x = (hit.distance - skinWidth) *dirX;
+                    rayLength = hit.distance;
+                    collInfo.CheckSide(false,true);
+                }
             }
         }
-        foreach (var origin in CalculateDetectorPosition(rightDetector))
+
+        else
         {
-            var hit = Physics2D.Raycast(origin, rightDetector.dir*dirX, rayLength, groundLayer);
-            Debug.DrawRay(origin,rightDetector.dir*dirX*rayLength,Color.red);
-            if (hit)
+            foreach (var origin in CalculateDetectorPosition(leftDetector))
             {
-                movement.x = (hit.distance - skinWidth) *dirX;
-                rayLength = hit.distance;
+                var hit = Physics2D.Raycast(origin, Vector2.right * dirX, rayLength, groundLayer);
+                Debug.DrawRay(origin, Vector2.right * dirX * rayLength, Color.red);
+                if (hit)
+                {
+
+                    movement.x = (hit.distance - skinWidth) * dirX;
+                    rayLength = hit.distance;
+                    collInfo.CheckSide(true,false);
+                }
             }
         }
+
+
     }
     /// <summary>
     /// Detect Collision using Ray.
@@ -166,40 +195,13 @@ public class PhysicsObject : MonoBehaviour {
            yield return Vector2.Lerp(detector.start, detector.end, t);
         }
     }
-    // private float Detect(Detector detector)
-    // {
-    //     return ModifyDetectorPosition(detector).Select(point =>
-    //         Physics2D.Raycast(point, detector.dir, detectorRayLength, groundLayer).distance);
-    // }
-    //
-    // private IEnumerable<Vector2> ModifyDetectorPosition(Detector detector)
-    // {
-    //     for (int i = 0; i < detectorCount; i++)
-    //     {
-    //         float t = (float) i / (detectorCount - 1);
-    //         yield return Vector2.Lerp(detector.start, detector.end, t);
-    //     }
-    // }
 
-    void DetectVerticalCollision()
-    {
-        float dirX = Mathf.Sign(movement.y);
-        
-    }
     #region Gravity
 
     protected void SimulateGravity()
     {
         movement.y += gravity * Time.deltaTime;
-        // if (mbDownColl)
-        // {
-        //     currentVerticalSpeed = currentVerticalSpeed < 0 ? 0 : currentVerticalSpeed;
-        // }
-        // else
-        // {
-        //     currentVerticalSpeed += gravity * Time.deltaTime;
-        //     currentVerticalSpeed = currentVerticalSpeed < fallClamp ? fallClamp : currentVerticalSpeed;
-        // }
+        if (movement.y < fallClamp) movement.y = fallClamp;
     }
     #endregion
     
@@ -235,50 +237,24 @@ public class PhysicsObject : MonoBehaviour {
     
     protected void Move()
     {
-        movement.y += gravity * Time.deltaTime;
-        CheckCollision();
-        transform.Translate(movement);
+        SetUpRayRange();
+        collInfo.Init();
         
-        //transform.Translate(movement);
+        if (movement.x != 0)
+        {
+            HorizontalCollision(ref movement);
+              
+        }
 
-
-
-        //var pos = transform.position;
-        // movement = new Vector3(currentHorizontalSpeed, currentVerticalSpeed);
-        //
-        // var move = movement * Time.deltaTime;
-        // var movedPosition = pos + move;
-        //
-        // //if it is not overlap, it is moved until it hits ground.
-        // var hit = Physics2D.OverlapBox(movedPosition, bounds.size, 0, groundLayer);
-        // if (!hit)
-        // {
-        //     transform.position += move;
-        //     return;
-        // }
-        //
-        // var positionToMove = transform.position;
-        // for (int i = 1; i < freeColliderCount; i++)
-        // {
-        //     float t = (float) i / freeColliderCount;
-        //     var posLerp = Vector2.Lerp(pos, movedPosition, t);
-        //
-        //     if (Physics2D.OverlapBox(posLerp, bounds.size, 0, groundLayer))
-        //     {
-        //         transform.position = positionToMove;
-        //         Debug.Log($"positionToMOve: {transform.position}");
-        //         if (i == 1)
-        //         {
-        //             currentVerticalSpeed = currentVerticalSpeed < 0 ? 0 : currentVerticalSpeed;
-        //             var dir = transform.position - hit.transform.position;
-        //             transform.position += dir.normalized * move.magnitude;
-        //         }
-        //
-        //         return;
-        //     }
-        //
-        //     positionToMove = posLerp;
-        // }
+        if (movement.y != 0)
+        {
+            VerticalCollision(ref movement);  
+        }
+        
+     
+        //CheckCollision();
+        transform.position+= movement ;
+        //movement.x = Mathf.Clamp(movement.x, -speedClamp, speedClamp);
     }
     #endregion
     
