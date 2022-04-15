@@ -68,7 +68,7 @@ public class PlayerController : PhysicsObject {
         
         if (move.x == 0)
         {
-            horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, 0, slowDown);
+            horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, 0, slowDown*Time.deltaTime);
             playerActionManager.ActWalkingAnimation(false);
             return;
         }
